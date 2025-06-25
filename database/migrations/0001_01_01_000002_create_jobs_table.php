@@ -43,6 +43,7 @@ return new class extends Migration
             $table->longText('exception');
             $table->timestamp('failed_at')->useCurrent();
         });
+
     }
 
     /**
