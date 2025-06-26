@@ -22,7 +22,10 @@ class Stock extends Model
         // strategy to hit the paerticular end point
         if ($this->retailer->name === 'Best Buy') {
             $results = Http::get('http://foo.test')->json();
-
+            $this->update([
+                'in_stock' => $results['available'],  // Correct array access
+                'price' => $results['price'],         // Correct array access
+            ]);
         }
 
         dd($results);

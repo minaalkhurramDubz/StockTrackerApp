@@ -8,7 +8,7 @@ use App\Models\Stock;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class ExampleTest extends TestCase
+class ProductTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -18,6 +18,7 @@ class ExampleTest extends TestCase
     public function it_checks_stock_for_products_at_retailers(): void
     {
 
+        
         $switch = Product::create(['name' => 'Nintendo Switch']);
 
         $best_buy = Retailer::create(['name' => 'Best Buy']);
