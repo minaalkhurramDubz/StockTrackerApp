@@ -23,23 +23,21 @@ class TrackCommandTest extends TestCase
         $this->seed(RetailerWithProduct::class);
 
         $this->assertFalse(Product::first()->inStock());
-        /*  $this->assertFalse((bool) $stock->fresh()->in_stock);
 
+        // faking an http endpoint
+        Http::fake(function () {
+            return [
+                'available' => true,
+                'price' => 2000,
+            ];
+        });
 
-            //faking an http endpoint
-Http::fake(function(){
-return [
-        'available'=>true,
-        'price'=>2000
-];
-});
+        // dd(Product::all());
+        // when - trigger the php artisan track command
 
-//dd(Product::all());
-            // when - trigger the php artisan track command
+        $this->artisan('track');
 
-            $this->artisan('track');
-
-            // then - the stock details should be refreshed
-            $this->assertTrue($stock->fresh()->in_stock);*/
+        // then - the stock details should be refreshed
+        $this->assertTrue(Product::first()->inStock());
     }
 }

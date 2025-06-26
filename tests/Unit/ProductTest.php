@@ -18,7 +18,6 @@ class ProductTest extends TestCase
     public function it_checks_stock_for_products_at_retailers(): void
     {
 
-        
         $switch = Product::create(['name' => 'Nintendo Switch']);
 
         $best_buy = Retailer::create(['name' => 'Best Buy']);
