@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Facades\App\Clients\ClientFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Retailer extends Model
@@ -22,5 +23,13 @@ class Retailer extends Model
     {
         // relationship with stock db, retailer has many stock
         return $this->hasMany(Stock::class);
+    }
+
+
+    // client creation. 
+    public function client()
+    {
+
+        return ClientFactory::make($this);
     }
 }

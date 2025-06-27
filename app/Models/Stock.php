@@ -2,8 +2,12 @@
 
 namespace App\Models;
 
+use App\Clients\BestBuy;
+use App\Clients\ClientException;
+use Facades\App\Clients\ClientFactory;
+use App\Clients\Target;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Http;
+use Str;
 
 class Stock extends Model
 {
@@ -19,17 +23,16 @@ class Stock extends Model
         // hit an api endpoint for the associated retailer
         // fetch up to date data
 
-        // strategy to hit the paerticular end point
-        if ($this->retailer->name === 'Best Buy') {
-            $results = Http::get('http://foo.test')->json();
-            $this->update([
-                'in_stock' => $results['available'],  // Correct array access
-                'price' => $results['price'],         // Correct array access
-            ]);
-        }
+        //using facotry pattenr to initialize new clients 
 
-        dd($results);
+        // make a new client and then call check availibility on it 
 
+        $status=$this->retailer->client()->checkAvailibility($this);
+   
+        $this->update([
+            'in_stock' => $status->available,  // Correct array access
+            'price' => $status->price,      // Correct array access
+        ]);
     }
 
     public function retailer()
