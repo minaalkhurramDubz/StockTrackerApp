@@ -11,7 +11,7 @@ use Database\Seeders\RetailerWithProduct;
 use Exception;
 use Facades\App\Clients\ClientFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-
+use Mockery;
 use Tests\TestCase;
 
 class StockTest extends TestCase
@@ -45,14 +45,9 @@ class StockTest extends TestCase
 
         // create a fake client for testing purposes
 
+        // mockes can be used to create fake client
 
-    // makes can be used to create fake client
-
-    $clientMock= Mockery::mock(Client::class);  
-    $clientMock->shouldReceive('checkAvailibility ')->andReturn(new StockStatus($available = true, $price = 9900));
-
-
-        ClientFactory::shouldReceive('make')->andReturn($clientMock);
+       ClientFactory::shouldReceive('make->checkAvailability')->andReturn( new StockStatus($available = true, $price = 9900));
 
         // tap is a laravel helper function
         $stock = tap(Stock::first())->track();
@@ -62,8 +57,8 @@ class StockTest extends TestCase
 
     }
 }
- 
-// alternative way to use a fake client class 
+
+/* alternative way to use a fake client class
 class FakeClient implements Client
 {
     public function checkAvailability(Stock $stock): StockStatus
@@ -75,3 +70,4 @@ class FakeClient implements Client
 
     }
 }
+*/

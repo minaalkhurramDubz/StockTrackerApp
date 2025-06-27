@@ -12,6 +12,7 @@ class Stock extends Model
     protected $casts = [
         'in_stock' => 'boolean',
     ];
+    //
 
     public function track()
     {
@@ -22,8 +23,7 @@ class Stock extends Model
 
         // make a new client and then call check availibility on it
 
-       $status = $this->retailer->client()->checkAvailability($this);
-
+        $status = $this->retailer->client()->checkAvailability($this);
 
         $this->update([
             'in_stock' => $status->available,  // Correct array access

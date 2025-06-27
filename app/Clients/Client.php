@@ -8,5 +8,5 @@ interface Client
 {
     // accessor function functionName(params): return type
     //
-    public function checkAvailibility(Stock $stock): StockStatus;
+    public function checkAvailability(Stock $stock): StockStatus;
 }
