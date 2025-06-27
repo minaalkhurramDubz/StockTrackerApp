@@ -4,9 +4,9 @@ namespace App\Clients;
 
 use App\Models\Stock;
 
-class Target implements Clients
+class Target implements Client
 {
-    public function checkAvailibility(Stock $stock)
+    public function checkAvailability(Stock $stock): StockStatus
     {
         // todo
 

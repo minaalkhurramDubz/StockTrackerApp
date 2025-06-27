@@ -25,8 +25,7 @@ class Retailer extends Model
         return $this->hasMany(Stock::class);
     }
 
-
-    // client creation. 
+    // client creation.
     public function client()
     {
 

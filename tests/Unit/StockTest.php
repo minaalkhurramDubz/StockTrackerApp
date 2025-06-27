@@ -2,12 +2,16 @@
 
 namespace Tests\Unit;
 
+use App\Clients\Client;
 use App\Clients\ClientException;
+use App\Clients\StockStatus;
 use App\Models\Retailer;
 use App\Models\Stock;
 use Database\Seeders\RetailerWithProduct;
 use Exception;
+use Facades\App\Clients\ClientFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+
 use Tests\TestCase;
 
 class StockTest extends TestCase
@@ -27,6 +31,47 @@ class StockTest extends TestCase
         $this->expectException(ClientException::class);
         // track the stock
         Stock::first()->track();
+
+    }
+
+    /** @test */
+    public function it_updates_local_stock_status_after_being_tracked()
+    {
+        $this->seed(RetailerWithProduct::class);
+
+        // uses the client factory to determine the appropirate cline
+
+        // check availability call
+
+        // create a fake client for testing purposes
+
+
+    // makes can be used to create fake client
+
+    $clientMock= Mockery::mock(Client::class);  
+    $clientMock->shouldReceive('checkAvailibility ')->andReturn(new StockStatus($available = true, $price = 9900));
+
+
+        ClientFactory::shouldReceive('make')->andReturn($clientMock);
+
+        // tap is a laravel helper function
+        $stock = tap(Stock::first())->track();
+
+        $this->assertTrue($stock->in_stock);
+        $this->assertEquals(9900, $stock->price);
+
+    }
+}
+ 
+// alternative way to use a fake client class 
+class FakeClient implements Client
+{
+    public function checkAvailability(Stock $stock): StockStatus
+    {
+
+        // returns our fake client
+
+        return new StockStatus($available = true, $price = 9900);
 
     }
 }

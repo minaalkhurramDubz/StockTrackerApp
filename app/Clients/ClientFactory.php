@@ -5,7 +5,6 @@ namespace App\Clients;
 use App\Models\Retailer;
 use Str;
 
-
 // client facctoyr using factory pattenrn
 class ClientFactory
 {
