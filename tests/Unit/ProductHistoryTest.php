@@ -2,12 +2,17 @@
 
 namespace Tests\Unit;
 
+
+use App\Clients\StockStatus;
 use App\Models\History;
+use App\Models\Product;
 use App\Models\Stock;
 use Database\Seeders\RetailerWithProduct;
+use Facades\App\Clients\ClientFactory;
 use Http;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+
 
 class ProductHistoryTest extends TestCase
 {
@@ -27,28 +32,46 @@ class ProductHistoryTest extends TestCase
 
         $this->seed(RetailerWithProduct::class);
 
-        Http::fake([
-            '*' => Http::response([
-                'products' => [
-                    [
-                        'salePrice' => 299.99,
-                        'onlineAvailability' => true,
-                    ],
-                ],
-            ], 200),
-        ]);
 
-        $this->assertEquals(0, History::count());
 
-        $stock = tap(Stock::first())->track();
+        ClientFactory::shouldReceive('make->checkAvailability')
+        ->andReturn(new StockStatus($available = true, $price=99));
 
-        $this->assertEquals(1, History::count());
+        // fake http to mock the request 
+        // Http::fake([
+        //     '*' => Http::response([
+        //         'products' => [
+        //             [
+        //                 'salePrice' => 299.99,
+        //                 'onlineAvailability' => true,
+        //             ],
+        //         ],
+        //     ], 200),
+        // ]);
 
-        $history = History::first();
 
-        $this->assertEquals($stock->price, $history->price);
-        $this->assertEquals($stock->in_stock, $history->in_stock);
-        $this->assertEquals($stock->product_id, $history->product_id);
+        $product = tap(Product::first(), function ($product){
+
+
+        $this->assertCount(0, $product->history);
+
+        $product->track();
+
+        $this->assertCount(1, $product->refresh()->history);
+        });
+
+        $history = $product->history->first();
+
+
+
+        $stock= $product->stock[0];
+
+
+
+        $this->assertEquals($price, $history->price);
+        $this->assertEquals($available, $history->in_stock);
+        $this->assertEquals($product->id, $history->product_id);
         $this->assertEquals($stock->id, $history->stock_id);
+
     }
 }

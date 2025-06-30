@@ -14,7 +14,7 @@ class Stock extends Model
     ];
     //
 
-    public function track()
+    public function track($callback = null)
     {
         // hit an api endpoint for the associated retailer
         // fetch up to date data
@@ -30,8 +30,11 @@ class Stock extends Model
             'price' => $status->price,      // Correct array access
         ]);
 
+        // compact way to optionally run a callback if one is provided. (if callback is not null )
+        $callback && $callback($this);
+
         // creating history for the product for testing
-        $this->recordhistory();
+        //      $this->recordhistory();
 
     }
 
@@ -40,24 +43,8 @@ class Stock extends Model
         return $this->belongsTo(Retailer::class);
     }
 
-    public function history()
+    public function product()
     {
-        return $this->hasMany(History::class);
-
-    }
-
-    public function recordHistory()
-    {
-        $this->history()->create(
-            [
-
-                'price' => $this->price,
-                'in_stock' => $this->in_stock,
-                'product_id' => $this->product_id,
-                //    'stock_id' => $this->id,
-            ]
-
-        );
-
+        return $this->belongsTo(Retailer::class);
     }
 }
