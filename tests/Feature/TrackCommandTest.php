@@ -32,6 +32,8 @@ class TrackCommandTest extends TestCase
             ];
         });
 
+        
+
         // dd(Product::all());
         // when - trigger the php artisan track command
 

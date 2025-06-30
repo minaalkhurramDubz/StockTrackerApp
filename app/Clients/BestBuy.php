@@ -15,11 +15,15 @@ class BestBuy implements Client
         // intercept the requests to see the results
         //
 
+     
+
+
         $product = $results['products'][0] ?? [];
 
         return new StockStatus(
             $product['onlineAvailability'] ?? false,
-            (int) $product['salePrice'] * 100 // converting from dollars to cents
+            $this->dollarsToCents($product['salePrice'])
+            // converting from dollars to cents
         );
     }
 
@@ -28,5 +32,11 @@ class BestBuy implements Client
         $apiKey = config('services.clients.bestbuy.key');
 
         return "https://api.bestbuy.com/v1/products(sku={$sku})?apiKey={$apiKey}&format=json";
+    }
+
+    protected function dollarsToCents($amount)
+    {
+        return (int) ($amount * 100);
+
     }
 }

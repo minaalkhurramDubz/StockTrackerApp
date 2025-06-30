@@ -7,14 +7,12 @@ use App\Clients\Client;
 use App\Models\Stock;
 use Database\Seeders\RetailerWithProduct;
 use Exception;
+use Http;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-
-//if we use command like vendor/pin/phpunit --exclude-group-api , it will run all tests except the ones marked with this group 
+// if we use command like vendor/pin/phpunit --exclude-group-api , it will run all tests except the ones marked with this group
 /** @group api */
-
-
 class BestBuyTest extends TestCase
 {
     use RefreshDatabase;
@@ -39,9 +37,33 @@ class BestBuyTest extends TestCase
             $stockStatus = (new BestBuy)->checkAvailability($stock);
             dd($stockStatus);
         } catch (Exception $e) {
-            $this->fail('failed to track any best buy api');
+            $this->fail('failed to track any best buy api'. $e->getMessage());
 
         }
+
+        $this->assertTrue(true);
+    }
+
+    /** @test  */
+
+    // regression test for finding the bug
+    public function it_creates_the_proper_stock_status_response()
+    {
+
+        Http::fake([
+            '*' => Http::response([
+                'products' => [
+                    [
+                        'salePrice' => 299.99,
+                        'onlineAvailability' => true,
+                    ],
+                ],
+            ], 200),
+        ]);
+
+        $stockStatus = (new BestBuy)->checkAvailability(new Stock);
+        $this->assertEquals(29999, $stockStatus->price);
+        $this->assertTrue($stockStatus->available);
 
     }
 }
