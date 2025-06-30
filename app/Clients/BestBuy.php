@@ -15,9 +15,6 @@ class BestBuy implements Client
         // intercept the requests to see the results
         //
 
-     
-
-
         $product = $results['products'][0] ?? [];
 
         return new StockStatus(

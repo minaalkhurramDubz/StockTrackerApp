@@ -21,7 +21,7 @@ class Stock extends Model
 
         // using facotry pattenr to initialize new clients
 
-        // make a new client and then call check availibility on it
+        // make a new client ansd then call check availibility on it
 
         $status = $this->retailer->client()->checkAvailability($this);
 
@@ -29,10 +29,35 @@ class Stock extends Model
             'in_stock' => $status->available,  // Correct array access
             'price' => $status->price,      // Correct array access
         ]);
+
+        // creating history for the product for testing
+        $this->recordhistory();
+
     }
 
     public function retailer()
     {
         return $this->belongsTo(Retailer::class);
+    }
+
+    public function history()
+    {
+        return $this->hasMany(History::class);
+
+    }
+
+    public function recordHistory()
+    {
+        $this->history()->create(
+            [
+
+                'price' => $this->price,
+                'in_stock' => $this->in_stock,
+                'product_id' => $this->product_id,
+                //    'stock_id' => $this->id,
+            ]
+
+        );
+
     }
 }

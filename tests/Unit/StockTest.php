@@ -15,9 +15,9 @@ use Tests\TestCase;
 
 class StockTest extends TestCase
 {
-    /** @test */
     use RefreshDatabase;
 
+    /** @test */
     public function it_throws_an_exception_if_client_not_found_when_tracking()
     {
         // given i have a retialer with stock

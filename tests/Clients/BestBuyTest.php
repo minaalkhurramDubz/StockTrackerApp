@@ -37,7 +37,7 @@ class BestBuyTest extends TestCase
             $stockStatus = (new BestBuy)->checkAvailability($stock);
             dd($stockStatus);
         } catch (Exception $e) {
-            $this->fail('failed to track any best buy api'. $e->getMessage());
+            $this->fail('failed to track any best buy api'.$e->getMessage());
 
         }
 
