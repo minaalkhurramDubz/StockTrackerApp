@@ -2,7 +2,6 @@
 
 namespace Tests\Unit;
 
-
 use App\Clients\StockStatus;
 use App\Models\History;
 use App\Models\Product;
@@ -12,7 +11,6 @@ use Facades\App\Clients\ClientFactory;
 use Http;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-
 
 class ProductHistoryTest extends TestCase
 {
@@ -32,12 +30,10 @@ class ProductHistoryTest extends TestCase
 
         $this->seed(RetailerWithProduct::class);
 
-
-
         ClientFactory::shouldReceive('make->checkAvailability')
-        ->andReturn(new StockStatus($available = true, $price=99));
+            ->andReturn(new StockStatus($available = true, $price = 99));
 
-        // fake http to mock the request 
+        // fake http to mock the request
         // Http::fake([
         //     '*' => Http::response([
         //         'products' => [
@@ -49,24 +45,18 @@ class ProductHistoryTest extends TestCase
         //     ], 200),
         // ]);
 
+        $product = tap(Product::first(), function ($product) {
 
-        $product = tap(Product::first(), function ($product){
+            $this->assertCount(0, $product->history);
 
+            $product->track();
 
-        $this->assertCount(0, $product->history);
-
-        $product->track();
-
-        $this->assertCount(1, $product->refresh()->history);
+            $this->assertCount(1, $product->refresh()->history);
         });
 
         $history = $product->history->first();
 
-
-
-        $stock= $product->stock[0];
-
-
+        $stock = $product->stock[0];
 
         $this->assertEquals($price, $history->price);
         $this->assertEquals($available, $history->in_stock);
