@@ -26,8 +26,38 @@ class TrackCommand extends Command
      */
     public function handle()
     {
-        // the model product tracks each record
-        Product::all()->each->track();
+        // fetch all products for progress bar
+        $products = Product::all();
 
+        // start a progress bar for feedback , initializes by the number of products
+        $this->output->progressStart($products->count());
+
+        // the model product tracks each record
+        $products->each(function ($products) {
+            $products->track();
+
+            $this->output->progressAdvance();
+        });
+
+        // finsih bar and shopw results in table
+        //
+        $this->showResults();
+
+    }
+
+    protected function showResults()
+    {
+        // finsih progress bar to 100%
+        $this->output->progressFinish();
+
+        $data = Product::leftJoin('stocks', 'stocks.product_id', '=', 'products.id')
+            ->get(['name', 'price', 'url', 'in_stock']);
+
+        $this->table(
+
+            // headers
+            ['Name', 'Price', 'URL', 'IN stock'],
+            $data
+        );
     }
 }
