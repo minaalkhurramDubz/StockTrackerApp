@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Events\NowInStock;
+use App\UseCases\TrackStock;
 use Illuminate\Database\Eloquent\Model;
 
 class Stock extends Model
@@ -15,28 +15,18 @@ class Stock extends Model
     ];
     //
 
-    public function track($callback = null)
+    public function track()
     {
+
+        // dispatching a job
+        dispatch(new TrackStock($this));
+
+        //    (new TrackStock($this))->handle();
+
         // hit an api endpoint for the associated retailer
         // fetch up to date data
 
         // using facotry pattenr to initialize new clients
-
-        // make a new client ansd then call check availibility on it
-
-        $status = $this->retailer->client()->checkAvailability($this);
-
-        if (! $this->in_stock && $status->available) {
-            event(new NowInStock($this));
-
-        }
-        $this->update([
-            'in_stock' => $status->available,  // Correct array access
-            'price' => $status->price,      // Correct array access
-        ]);
-
-        // compact way to optionally run a callback if one is provided. (if callback is not null )
-        $callback && $callback($this);
 
         // creating history for the product for testing
         //      $this->recordhistory();

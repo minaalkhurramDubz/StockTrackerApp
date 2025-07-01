@@ -20,7 +20,6 @@ class ImportantStockUpdate extends Notification
 
         $this->stock = $stock;
 
-
     }
 
     /**
@@ -39,7 +38,7 @@ class ImportantStockUpdate extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Important Stock Update '. $this->stock->product->name)
+            ->subject('Important Stock Update '.$this->stock->product->name)
             ->line('The introduction to the notification.')
             ->action('Buy it now', url($this->stock->url))
             ->line('Thank you for using our application!');

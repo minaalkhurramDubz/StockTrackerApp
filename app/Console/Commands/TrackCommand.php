@@ -26,7 +26,7 @@ class TrackCommand extends Command
      */
     public function handle()
     {
-        // the model product tracks each
+        // the model product tracks each record
         Product::all()->each->track();
 
     }
